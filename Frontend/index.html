@@ -1,136 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IoT Dashboard Test</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 2rem;
-    }
-    .section {
-      margin-bottom: 2rem;
-    }
-    label, input, button {
-      display: block;
-      margin: 0.5rem 0;
-    }
-    .result {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #f4f4f4;
-      border-radius: 5px;
-      font-family: monospace;
-    }
-    .block {
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 1rem;
-      margin-top: 1rem;
-      background: #fafafa;
-    }
-  </style>
-</head>
-<body>
-  <h1>IoT Dashboard Test</h1>
-
-  <div class="section">
-    <button onclick="addDataBlock()">+ Add Data Block</button>
-    <button onclick="addControlBlock()">+ Add Control Block</button>
-    <div id="blocks"></div>
-  </div>
-
-  <script>
-    const scriptUrl = "http://localhost:3000/";
-
-    function addDataBlock() {
-      const container = document.getElementById("blocks");
-      const block = document.createElement("div");
-      block.className = "block";
-
-      const name = prompt("Enter the name for this data block:");
-      const key = prompt("Enter the JSON key to watch (e.g., temperature):");
-
-      block.innerHTML = `
-        <h3>${name}</h3>
-        <p><strong>Key:</strong> ${key}</p>
-        <div class="result">Waiting for data...</div>
-        <button onclick="fetchData(this, '${key}')">GET Data</button>
-        <button onclick="this.parentElement.remove()">Delete</button>
-      `;
-      container.appendChild(block);
-
-      setInterval(() => {
-        autoUpdate(block, key);
-      }, 3000);
-    }
-
-    function autoUpdate(block, key) {
-      fetch(scriptUrl)
-        .then(response => response.json())
-        .then(data => {
-          block.querySelector(".result").textContent = `${key}: ${data[key] ?? 'N/A'}`;
-        })
-        .catch(error => {
-          block.querySelector(".result").textContent = "Error: " + error;
-        });
-    }
-
-    function fetchData(button, key) {
-      const block = button.parentElement;
-      fetch(scriptUrl)
-        .then(response => response.json())
-        .then(data => {
-          block.querySelector(".result").textContent = `${key}: ${data[key] ?? 'N/A'}`;
-        })
-        .catch(error => {
-          block.querySelector(".result").textContent = "Error: " + error;
-        });
-    }
-
-    function addControlBlock() {
-      const container = document.getElementById("blocks");
-      const block = document.createElement("div");
-      block.className = "block";
-      block.innerHTML = `
-        <h3>Control Block</h3>
-        <label>Temperature:</label>
-        <input type="number" class="temp" value="25">
-        <label>Humidity:</label>
-        <input type="number" class="humid" value="60">
-        <button onclick="sendControl(this)">POST Data</button>
-        <div class="result"></div>
-        <button onclick="this.parentElement.remove()">Delete</button>
-      `;
-      container.appendChild(block);
-    }
-
-    function sendControl(button) {
-      const block = button.parentElement;
-      const temp = block.querySelector(".temp").value;
-      const humid = block.querySelector(".humid").value;
-      const result = block.querySelector(".result");
-
-      fetch(scriptUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ temperature: temp, humidity: humid })
-      })
-      .then(response => response.text())
-      .then(data => {
-        result.textContent = data;
-      })
-      .catch(error => {
-        result.textContent = "Error: " + error;
-      });
-    }
-  </script>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,33 +6,66 @@
   <title>IoT Dashboard Test</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
       padding: 2rem;
     }
-    .section {
-      margin-bottom: 2rem;
+    h1 {
+      text-align: center;
+      color: #333;
     }
-    label, input, button {
-      display: block;
-      margin: 0.5rem 0;
+    .section {
+      margin: 2rem auto;
+      max-width: 900px;
+      text-align: center;
+    }
+    button {
+      margin: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #007BFF;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .block {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      margin: 1rem auto;
+      max-width: 600px;
+      text-align: left;
+    }
+    .block h3 {
+      margin-top: 0;
+      color: #444;
     }
     .result {
       margin-top: 1rem;
       padding: 1rem;
-      background: #f4f4f4;
-      border-radius: 5px;
+      background: #eef2f7;
+      border-left: 4px solid #007BFF;
       font-family: monospace;
-    }
-    .block {
-      border: 1px solid #ccc;
       border-radius: 5px;
-      padding: 1rem;
-      margin-top: 1rem;
-      background: #fafafa;
     }
     .toggle {
-      padding: 0.5rem 1rem;
+      background: #28a745;
+      color: white;
+      border-radius: 50px;
+      padding: 0.6rem 1.4rem;
       font-weight: bold;
+      border: none;
+      margin: 0.5rem 0;
+    }
+    .toggle[data-state="on"] {
+      background: #dc3545;
     }
   </style>
 </head>
@@ -194,7 +94,7 @@
         <p><strong>Key:</strong> ${key}</p>
         <div class="result">Waiting for data...</div>
         <button onclick="fetchData(this, '${key}')">GET Data</button>
-        <button onclick="this.parentElement.remove()">Delete</button>
+        <button onclick="this.parentElement.remove()" style="background-color: #6c757d;">Delete</button>
       `;
       container.appendChild(block);
 
@@ -239,7 +139,7 @@
         <p><strong>Key:</strong> ${key}</p>
         <button class="toggle" data-state="off" onclick="toggleDevice(this, '${key}')">Turn ON</button>
         <div class="result"></div>
-        <button onclick="this.parentElement.remove()">Delete</button>
+        <button onclick="this.parentElement.remove()" style="background-color: #6c757d;">Delete</button>
       `;
       container.appendChild(block);
     }
@@ -250,6 +150,7 @@
 
       button.setAttribute("data-state", newState ? "on" : "off");
       button.textContent = `Turn ${newState ? "OFF" : "ON"}`;
+      button.style.backgroundColor = newState ? '#dc3545' : '#28a745';
 
       const payload = {};
       payload[key] = newState;
